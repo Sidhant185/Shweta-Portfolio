@@ -336,44 +336,44 @@ const portfolioWorkData = {
     {
       id: 'expertise-1',
       icon: 'capability',
-      capability: 'Content Strategy and Planning',
-      delivered: 'Built multi-platform calendar architecture, distribution mapping, and bucket strategy from scratch.',
-      proof: '230 to 6,100 follower growth framework at Vedam',
+      capability: 'Content Strategy & Planning',
+      delivered: 'Owned end-to-end calendar architecture, bucket strategy, and content distribution planning across 6 platforms simultaneously.',
+      proof: '26x Instagram community growth — 230 to 6,100 followers',
     },
     {
       id: 'expertise-2',
       icon: 'delivered',
       capability: 'Performance Copywriting',
-      delivered: 'Managed push, lifecycle, and campaign messaging for conversion and retention goals.',
-      proof: '0.7% to 7% CTR trajectory and 2x campaign revenue uplift',
+      delivered: 'Led push notification, lifecycle CRM, and campaign copy for SSC, Railways, Banking, and UPSC exam verticals at Adda247.',
+      proof: '0.7% to 7% CTR trajectory — 2x revenue uplift on Independence Day campaign',
     },
     {
       id: 'expertise-3',
       icon: 'timeline',
       capability: 'On-Camera Communication',
-      delivered: 'Fronted institutional interviews, vox pop formats, and launch communication videos.',
-      proof: 'Brand-facing narrative ownership across multiple public video formats',
+      delivered: 'Fronted institutional interviews, launch videos, and vox pop formats — scripted and delivered brand narratives independently.',
+      proof: 'Multiple high-visibility public video formats across Vedam\'s YouTube channel',
     },
     {
       id: 'expertise-4',
       icon: 'proof',
-      capability: 'ORM and Reputation Governance',
-      delivered: 'Handled Quora, Reddit, GMB, and SERP-focused response systems with sentiment tracking.',
-      proof: 'Ranked review-intent query at #1 with supporting engagement evidence',
+      capability: 'ORM & Reputation Management',
+      delivered: 'Built and managed Quora, Reddit, GMB, and SERP-level response systems with live sentiment tracking and escalation protocols.',
+      proof: 'Review-intent query ranked #1 on Google — 2.4K+ Quora views, 18 upvotes',
     },
     {
       id: 'expertise-5',
       icon: 'system',
-      capability: 'Analytics and Reporting',
-      delivered: 'Created WOW and MOM dashboards connecting content actions to reach, leads, and payments.',
-      proof: '281 leads tracked with source splits and payment-funnel visibility',
+      capability: 'Analytics & Reporting',
+      delivered: 'Designed WOW and MOM dashboards for leadership — surfacing reach, lead attribution, payment funnel, and competitor benchmarks.',
+      proof: '281 leads tracked with full YouTube/LinkedIn/payment source splits',
     },
     {
       id: 'expertise-6',
       icon: 'workmode',
-      capability: 'Cross-Functional Execution',
-      delivered: 'Coordinated with founders, mentors, creative teams, and paid media for unified launches.',
-      proof: 'Sustained multi-platform execution with consistent governance standards',
+      capability: 'Cross-Functional Leadership',
+      delivered: 'Coordinated founders, creative teams, mentors, and paid media for unified campaign launches — managed systems, not just tasks.',
+      proof: 'End-to-end ownership of 9 inter-linked operational systems at Vedam',
     },
   ],
   timeline: [
@@ -590,9 +590,19 @@ function applyThumbnail(img, media, item) {
     return;
   }
 
+  // If the first candidate is a local asset, apply immediately — no CORS issues
+  const firstCandidate = candidates[0];
+  if (firstCandidate && !firstCandidate.startsWith('http')) {
+    img.onload = clearFallbackState;
+    img.onerror = () => { tryNext(1); };
+    img.src = firstCandidate;
+    return;
+  }
+
   let index = 0;
 
-  const tryNext = () => {
+  const tryNext = (startIndex) => {
+    if (startIndex !== undefined) index = startIndex;
     if (index >= candidates.length) {
       setFallbackState(item.fallbackReason || 'all_candidates_failed');
       return;
@@ -635,8 +645,9 @@ function createWorkCard(item) {
   thumbnail.className = 'work-thumb';
   thumbnail.loading = 'lazy';
   thumbnail.decoding = 'async';
-  thumbnail.referrerPolicy = 'no-referrer';
   thumbnail.alt = `${item.platform} thumbnail for ${item.title}`;
+  // Only set referrerPolicy for remote images (added in applyThumbnail for remote)
+
 
   const fallback = document.createElement('div');
   fallback.className = 'work-thumb-fallback';
