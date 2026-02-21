@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /assets/proofs/
 
-Sitemap: https://shweta-ranjan-portfolio.netlify.app/sitemap.xml
+Sitemap: https://iamshwetaranjan.in/sitemap.xml

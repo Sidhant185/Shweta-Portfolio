@@ -28,6 +28,9 @@
  * @property {string} context
  * @property {string} url
  * @property {string} cta
+ * @property {string} logoFile
+ * @property {string} logoAlt
+ * @property {string} fallbackInitial
  */
 
 /**
@@ -67,18 +70,16 @@
  */
 
 /**
- * @typedef {'awaiting-url' | 'published'} WritingSampleStatus
- */
-
-/**
- * @typedef {Object} WritingSample
+ * @typedef {Object} WritingPortfolioItem
  * @property {string} id
- * @property {string} publication
- * @property {string} title
- * @property {string} publishedDate
- * @property {string} keywordFocus
- * @property {string | null} url
- * @property {WritingSampleStatus} status
+ * @property {string} company
+ * @property {string} companyUrl
+ * @property {string} companyInitial
+ * @property {string} type
+ * @property {string} domain
+ * @property {string} scope
+ * @property {string[]} keyAreas
+ * @property {string} period
  */
 
 /**
@@ -96,7 +97,7 @@
  * @property {CaseStudyMetric[]} addaImpact
  * @property {ExpertiseItem[]} expertise
  * @property {TimelineItem[]} timeline
- * @property {WritingSample[]} writingSamples
+ * @property {WritingPortfolioItem[]} writingPortfolio
  */
 
 /** @type {PortfolioWorkData} */
@@ -113,6 +114,7 @@ const portfolioWorkData = {
       category: 'Short-form on-camera storytelling',
       metric: 'Brand visibility format',
       url: 'https://youtube.com/shorts/B9IHssr47CM?si=PWSXvGxNYk6wyPY4',
+      thumbnailPrimary: 'assets/work-thumbs/yt-short-1.jpg',
     },
     {
       id: 'yt-short-2',
@@ -121,6 +123,7 @@ const portfolioWorkData = {
       category: 'Audience engagement format',
       metric: 'CTR range 4-6.7%',
       url: 'https://youtube.com/shorts/bU5Nj8xtWWU?si=-X8ZBD4s7wbc4-mH',
+      thumbnailPrimary: 'assets/work-thumbs/yt-short-2.jpg',
     },
     {
       id: 'yt-short-3',
@@ -129,6 +132,7 @@ const portfolioWorkData = {
       category: 'Campaign aligned communication',
       metric: 'Structured storytelling',
       url: 'https://youtube.com/shorts/gDC1NScfF64?si=MLb2K7X3Vziw_0Mp',
+      thumbnailPrimary: 'assets/work-thumbs/yt-short-3.jpg',
     },
     {
       id: 'yt-short-4',
@@ -137,6 +141,7 @@ const portfolioWorkData = {
       category: 'On-camera informational format',
       metric: 'UGC pipeline support',
       url: 'https://youtube.com/shorts/DtcWUyBzphw?si=nU3ypi-upoIVdQhl',
+      thumbnailPrimary: 'assets/work-thumbs/yt-short-4.jpg',
     },
   ],
   instagramReels: [
@@ -147,6 +152,7 @@ const portfolioWorkData = {
       category: 'Short-form community content',
       metric: 'Follower growth support',
       url: 'https://www.instagram.com/reel/DUdTR8iCId5/?igsh=MTlqcXR0aWd0ajRreg==',
+      thumbnailPrimary: 'assets/work-thumbs/ig-reel-1.svg',
     },
     {
       id: 'ig-reel-2',
@@ -155,6 +161,7 @@ const portfolioWorkData = {
       category: 'Audience-first scripting',
       metric: '3%+ engagement maintenance',
       url: 'https://www.instagram.com/reel/DUGIL2pk7Yn/?igsh=Zmo3ZW9yem8yZHM=',
+      thumbnailPrimary: 'assets/work-thumbs/ig-reel-2.svg',
     },
     {
       id: 'ig-reel-3',
@@ -163,6 +170,7 @@ const portfolioWorkData = {
       category: 'Brand communication format',
       metric: 'Monthly views acceleration',
       url: 'https://www.instagram.com/reel/DON0tghgRUc/?igsh=M2ZyNWcwNnl4c3Q1',
+      thumbnailPrimary: 'assets/work-thumbs/ig-reel-3.svg',
     },
     {
       id: 'ig-reel-4',
@@ -171,6 +179,7 @@ const portfolioWorkData = {
       category: 'On-camera short video execution',
       metric: 'Institutional trust content',
       url: 'https://www.instagram.com/reel/DOJKASDk0TM/?igsh=MTQ5b2Y2M2lrY2FhMQ==',
+      thumbnailPrimary: 'assets/work-thumbs/ig-reel-4.svg',
     },
     {
       id: 'ig-reel-5',
@@ -179,6 +188,7 @@ const portfolioWorkData = {
       category: 'Platform-native engagement content',
       metric: 'Community conversation format',
       url: 'https://www.instagram.com/reel/DOGcwm-gdgU/?igsh=YTJrbjFoaHBvazk0',
+      thumbnailPrimary: 'assets/work-thumbs/ig-reel-5.svg',
     },
   ],
   channelPresence: [
@@ -191,6 +201,9 @@ const portfolioWorkData = {
       context: 'Long-form and shorts ecosystem with SEO-aligned packaging.',
       url: 'https://www.youtube.com/@vedamschooloftechnology',
       cta: 'Open channel',
+      logoFile: 'assets/logos/youtube.svg',
+      logoAlt: 'YouTube logo',
+      fallbackInitial: 'Y',
     },
     {
       id: 'presence-instagram',
@@ -201,6 +214,9 @@ const portfolioWorkData = {
       context: 'Scaled follower base with repeatable engagement formats.',
       url: 'https://tinyurl.com/8fn2272s',
       cta: 'Open profile',
+      logoFile: 'assets/logos/instagram.svg',
+      logoAlt: 'Instagram logo',
+      fallbackInitial: 'IG',
     },
     {
       id: 'presence-quora',
@@ -211,6 +227,9 @@ const portfolioWorkData = {
       context: 'Search-intent and ORM support through managed Q&A content.',
       url: 'https://qr.ae/pCBXbK',
       cta: 'Open space',
+      logoFile: 'assets/logos/quora.svg',
+      logoAlt: 'Quora logo',
+      fallbackInitial: 'Q',
     },
     {
       id: 'presence-linkedin',
@@ -221,6 +240,9 @@ const portfolioWorkData = {
       context: 'Thought-leadership and lead-oriented distribution cadence.',
       url: 'https://www.linkedin.com/school/vedam-school-of-technology',
       cta: 'Open page',
+      logoFile: 'assets/logos/linkedin.svg',
+      logoAlt: 'LinkedIn logo',
+      fallbackInitial: 'in',
     },
   ],
   vedamMetrics: [
@@ -356,34 +378,18 @@ const portfolioWorkData = {
   ],
   timeline: [
     {
-      id: 'timeline-1',
-      role: 'Social Media Senior Associate',
-      company: 'Vedam School of Technology',
-      period: 'Apr 2025 - Present',
-      track: 'Leadership track',
-      impact: 'Built end-to-end social and ORM systems from zero baseline',
-      badge: 'Core role',
-    },
-    {
-      id: 'timeline-2',
-      role: 'Marketing Copywriter',
-      company: 'Adda247 and CareerPower',
-      period: 'Apr 2022 - Mar 2025',
-      track: 'Performance communication track',
-      impact: 'Scaled CTR and campaign revenue outcomes across major exam verticals',
-      badge: 'Corporate',
-    },
-    {
-      id: 'timeline-3',
-      role: 'Freelance Content Writer',
-      company: 'Teachmint',
-      period: 'Jun 2021 - Dec 2022',
-      track: 'Parallel freelance track',
-      impact: 'Delivered SEO-led educational writing with intent-focused structure',
-      badge: 'Freelance',
+      id: 'timeline-5',
+      order: 1,
+      role: 'Content Writer',
+      company: 'Numen Edu and Techmiles',
+      period: '2021 - 2022',
+      track: 'Early client portfolio track',
+      impact: 'Built domain writing depth across education and technology categories',
+      badge: 'Assignments',
     },
     {
       id: 'timeline-4',
+      order: 2,
       role: 'Senior Content Writer',
       company: 'Rail Recipe',
       period: 'Aug 2021 - Jan 2022',
@@ -392,42 +398,80 @@ const portfolioWorkData = {
       badge: 'Early stage',
     },
     {
-      id: 'timeline-5',
-      role: 'Content Writer',
-      company: 'Numen Edu and Techmiles',
-      period: '2021 - 2022',
-      track: 'Early client portfolio track',
-      impact: 'Built domain writing depth across education and technology categories',
-      badge: 'Assignments',
+      id: 'timeline-3',
+      order: 3,
+      role: 'Freelance Content Writer',
+      company: 'Teachmint',
+      period: 'Jun 2021 - Dec 2022',
+      track: 'Parallel freelance track',
+      impact: 'Delivered SEO-led educational writing with intent-focused structure',
+      badge: 'Freelance',
+    },
+    {
+      id: 'timeline-2',
+      order: 4,
+      role: 'Marketing Copywriter',
+      company: 'Adda247 and CareerPower',
+      period: 'Apr 2022 - Mar 2025',
+      track: 'Performance communication track',
+      impact: 'Scaled CTR and campaign revenue outcomes across major exam verticals',
+      badge: 'Corporate',
+    },
+    {
+      id: 'timeline-1',
+      order: 5,
+      role: 'Social Media Senior Associate',
+      company: 'Vedam School of Technology',
+      period: 'Apr 2025 - Present',
+      track: 'Leadership track',
+      impact: 'Built end-to-end social and ORM systems from zero baseline',
+      badge: 'Core role',
     },
   ],
-  writingSamples: [
+  writingPortfolio: [
     {
-      id: 'writing-1',
-      publication: 'Teachmint',
-      title: 'SEO Educational Article Sample',
-      publishedDate: 'Publication date shared on request',
-      keywordFocus: 'Exam preparation strategy',
-      url: null,
-      status: 'awaiting-url',
+      id: 'writing-railrecipe',
+      company: 'Rail Recipe',
+      companyUrl: 'https://www.railrecipe.com/',
+      companyInitial: 'RR',
+      type: 'Website Copy + Blog',
+      domain: 'Travel · Railway Services',
+      scope: 'Complete website copy and blog content for India\'s railway food delivery platform. Delivered homepage, service page, and category copy alongside regular SEO blog articles.',
+      keyAreas: ['Homepage copy', 'Service page content', 'SEO blog articles', 'Category descriptions', 'CTA frameworks'],
+      period: 'Aug 2021 – Jan 2022',
     },
     {
-      id: 'writing-2',
-      publication: 'Rail Recipe',
-      title: 'Industry Content Campaign Sample',
-      publishedDate: 'Publication date shared on request',
-      keywordFocus: 'Travel category intent term',
-      url: null,
-      status: 'awaiting-url',
+      id: 'writing-teachmint',
+      company: 'Teachmint',
+      companyUrl: 'https://blog.teachmint.com/',
+      companyInitial: 'TM',
+      type: 'Blog Writing',
+      domain: 'EdTech · Online Learning',
+      scope: 'Long-form SEO blog articles for one of India\'s leading EdTech platforms. Topics spanned teaching methodology, online classroom strategy, and education-sector trend analysis.',
+      keyAreas: ['EdTech long-form blogs', 'Teaching strategy guides', 'Exam preparation content', 'SEO keyword targeting', 'Editorial structure'],
+      period: 'Jun 2021 – Dec 2022',
     },
     {
-      id: 'writing-3',
-      publication: 'Numen Edu / Techmiles',
-      title: 'Technology Education Blog Sample',
-      publishedDate: 'Publication date shared on request',
-      keywordFocus: 'Skill development keyword cluster',
-      url: null,
-      status: 'awaiting-url',
+      id: 'writing-numen',
+      company: 'Numen Edu Services',
+      companyUrl: 'https://numeneduservices.com/',
+      companyInitial: 'NE',
+      type: 'Website Copy',
+      domain: 'Education Services',
+      scope: 'Brand and website copy for an education services company including programme page content, about section narratives, and key landing page messaging.',
+      keyAreas: ['Brand voice copy', 'Programme page content', 'About and leadership pages', 'Service descriptions', 'Landing page messaging'],
+      period: '2021 – 2022',
+    },
+    {
+      id: 'writing-techmiles',
+      company: 'Techmiles',
+      companyUrl: 'https://techmiles.co/',
+      companyInitial: 'TC',
+      type: 'Technology Content',
+      domain: 'Technology · Career Development',
+      scope: 'Technology and career development content for a digital skills platform. Covered skill-building articles, industry overviews, and career transition guides for tech-sector audiences.',
+      keyAreas: ['Technology articles', 'Skill development content', 'Career guide writing', 'Platform copy', 'Industry overviews'],
+      period: '2021 – 2022',
     },
   ],
 };
@@ -661,11 +705,29 @@ function createPresenceCard(item) {
   const platform = document.createElement('div');
   platform.className = 'presence-platform';
 
-  const iconWrap = document.createElement('span');
-  iconWrap.className = 'presence-icon-wrap';
+  // Logo wrap: try img first, fall back to text-initial badge
+  const logoWrap = document.createElement('span');
+  logoWrap.className = 'presence-icon-wrap';
   const badgeStyle = (item.badgeStyle || item.platform || 'youtube').toLowerCase();
-  iconWrap.classList.add(`brand-${badgeStyle}`);
-  iconWrap.appendChild(createIcon(item.icon, 'icon'));
+  logoWrap.classList.add(`brand-${badgeStyle}`);
+
+  if (item.logoFile) {
+    const logoImg = document.createElement('img');
+    logoImg.className = 'presence-logo';
+    logoImg.src = item.logoFile;
+    logoImg.alt = item.logoAlt || item.platform;
+    logoImg.onerror = () => {
+      logoImg.remove();
+      const initial = document.createElement('span');
+      initial.className = 'presence-fallback-initial';
+      initial.textContent = item.fallbackInitial || item.platform.charAt(0);
+      logoWrap.appendChild(initial);
+    };
+    logoWrap.appendChild(logoImg);
+  } else {
+    // SVG icon fallback
+    logoWrap.appendChild(createIcon(item.icon, 'icon'));
+  }
 
   const title = document.createElement('div');
   title.className = 'presence-title';
@@ -688,7 +750,7 @@ function createPresenceCard(item) {
   cta.appendChild(createIcon('arrow-right', 'icon'));
 
   title.append(label, metric);
-  platform.append(iconWrap, title);
+  platform.append(logoWrap, title);
   card.append(platform, context, cta);
   return card;
 }
@@ -770,8 +832,10 @@ function createExpertiseCard(item) {
 
 function createTimelineItem(item, index) {
   const wrapper = document.createElement('article');
-  wrapper.className = 'timeline-item reveal';
-  wrapper.style.transitionDelay = `${Math.min(index * 0.07, 0.35)}s`;
+  const isEven = index % 2 === 1;
+  wrapper.className = `timeline-item reveal${isEven ? ' timeline-item-even' : ' timeline-item-odd'}`;
+  wrapper.style.transitionDelay = `${Math.min(index * 0.08, 0.4)}s`;
+  wrapper.dataset.order = item.order || index;
 
   const node = document.createElement('span');
   node.className = 'timeline-node';
@@ -816,53 +880,70 @@ function createTimelineItem(item, index) {
   return wrapper;
 }
 
-function createWritingSampleRow(item) {
-  const row = document.createElement('article');
-  row.className = 'writing-sample-row';
-  row.dataset.status = item.status;
+function createWritingClientCard(item) {
+  const card = document.createElement('article');
+  card.className = 'writing-client-card';
 
   const head = document.createElement('div');
-  head.className = 'writing-sample-head';
+  head.className = 'writing-client-head';
 
-  const publication = document.createElement('p');
-  publication.className = 'writing-sample-publication';
-  publication.textContent = item.publication;
+  const badge = document.createElement('span');
+  badge.className = 'writing-client-badge';
+  badge.textContent = item.companyInitial;
 
-  const dateChip = document.createElement('span');
-  dateChip.className = 'writing-chip';
-  dateChip.textContent = item.publishedDate;
+  const headText = document.createElement('div');
+  headText.className = 'writing-client-head-text';
 
-  head.append(publication, dateChip);
+  const companyLink = document.createElement('a');
+  companyLink.className = 'writing-client-name';
+  companyLink.href = item.companyUrl;
+  companyLink.target = '_blank';
+  companyLink.rel = 'noopener noreferrer';
+  companyLink.textContent = item.company;
 
-  const title = document.createElement('p');
-  title.className = 'writing-sample-title';
-  title.textContent = item.title;
+  const period = document.createElement('span');
+  period.className = 'writing-client-period';
+  period.textContent = item.period;
 
-  const meta = document.createElement('div');
-  meta.className = 'writing-sample-meta';
+  headText.append(companyLink, period);
+  head.append(badge, headText);
 
-  const keywordChip = document.createElement('span');
-  keywordChip.className = 'writing-chip writing-chip-keyword';
-  keywordChip.textContent = `Keyword: ${item.keywordFocus}`;
-  meta.appendChild(keywordChip);
+  const typeRow = document.createElement('div');
+  typeRow.className = 'writing-type-row';
 
-  let action;
-  if (item.url && item.status === 'published') {
-    action = document.createElement('a');
-    action.className = 'writing-link';
-    action.href = item.url;
-    action.target = '_blank';
-    action.rel = 'noopener noreferrer';
-    action.textContent = 'Open published article';
-  } else {
-    action = document.createElement('span');
-    action.className = 'writing-link writing-link-pending';
-    action.setAttribute('role', 'status');
-    action.textContent = 'Publication URL available on request';
-  }
+  const typeTag = document.createElement('span');
+  typeTag.className = 'writing-type-tag';
+  typeTag.textContent = item.type;
 
-  row.append(head, title, meta, action);
-  return row;
+  const domainTag = document.createElement('span');
+  domainTag.className = 'writing-domain-tag';
+  domainTag.textContent = item.domain;
+
+  typeRow.append(typeTag, domainTag);
+
+  const scope = document.createElement('p');
+  scope.className = 'writing-client-scope';
+  scope.textContent = item.scope;
+
+  const areasLabel = document.createElement('p');
+  areasLabel.className = 'writing-areas-label';
+  areasLabel.textContent = 'Key areas';
+
+  const areas = document.createElement('div');
+  areas.className = 'writing-areas';
+  item.keyAreas.forEach((area) => {
+    const chip = document.createElement('span');
+    chip.className = 'writing-area-chip';
+    chip.textContent = area;
+    areas.appendChild(chip);
+  });
+
+  const cta = document.createElement('span');
+  cta.className = 'writing-client-cta';
+  cta.textContent = 'Samples available on request';
+
+  card.append(head, typeRow, scope, areasLabel, areas, cta);
+  return card;
 }
 
 function renderWorkItems() {
@@ -950,12 +1031,12 @@ function renderTimeline() {
 }
 
 function renderWritingSamples() {
-  const list = document.getElementById('writingSamplesList');
-  if (!list) return;
+  const grid = document.getElementById('writingClientGrid');
+  if (!grid) return;
 
-  list.innerHTML = '';
-  portfolioWorkData.writingSamples.forEach((item) => {
-    list.appendChild(createWritingSampleRow(item));
+  grid.innerHTML = '';
+  portfolioWorkData.writingPortfolio.forEach((item) => {
+    grid.appendChild(createWritingClientCard(item));
   });
 }
 
@@ -1093,11 +1174,11 @@ function createMarqueeController(viewport) {
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reducedMotion) {
     return {
-      pause() {},
-      resume() {},
-      resumeWithDelay() {},
-      step() {},
-      refresh() {},
+      pause() { },
+      resume() { },
+      resumeWithDelay() { },
+      step() { },
+      refresh() { },
     };
   }
 
@@ -1134,13 +1215,18 @@ function createMarqueeController(viewport) {
     running = true;
     lastTimestamp = 0;
     viewport.classList.remove('is-paused');
+    delete viewport.dataset.userPaused;
     rafId = window.requestAnimationFrame(frame);
   };
 
-  const stop = () => {
+  const stop = (userTriggered = false) => {
     if (!running) return;
     running = false;
     viewport.classList.add('is-paused');
+    // Only show the visible pause badge when user explicitly paused
+    if (userTriggered) {
+      viewport.dataset.userPaused = 'true';
+    }
     if (rafId !== null) {
       window.cancelAnimationFrame(rafId);
       rafId = null;
@@ -1165,11 +1251,11 @@ function createMarqueeController(viewport) {
     }
   };
 
-  viewport.addEventListener('mouseenter', stop);
+  viewport.addEventListener('mouseenter', () => stop(false));
   viewport.addEventListener('mouseleave', () => resumeWithDelay(220));
-  viewport.addEventListener('focusin', stop);
+  viewport.addEventListener('focusin', () => stop(false));
   viewport.addEventListener('focusout', () => resumeWithDelay(320));
-  viewport.addEventListener('touchstart', stop, { passive: true });
+  viewport.addEventListener('touchstart', () => stop(false), { passive: true });
   viewport.addEventListener('touchend', () => resumeWithDelay(420), { passive: true });
 
   document.addEventListener('visibilitychange', () => {
@@ -1192,7 +1278,7 @@ function createMarqueeController(viewport) {
   });
 
   return {
-    pause: stop,
+    pause: (userTriggered = false) => stop(userTriggered),
     resume: start,
     resumeWithDelay,
     step(direction) {
@@ -1258,7 +1344,8 @@ function initializeCarouselSystem() {
       const controller = marqueeControllers.get(targetId);
       if (!controller) return;
 
-      controller.pause();
+      // User manually triggered — mark as user-paused briefly
+      controller.pause(true);
       controller.step(action);
       controller.resumeWithDelay(420);
 
