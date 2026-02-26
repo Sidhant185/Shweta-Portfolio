@@ -383,7 +383,7 @@ const portfolioWorkData = {
       role: 'Content Writer',
       company: 'Numen Edu and Techmiles',
       period: '2021 - 2022',
-      track: 'Early client portfolio track',
+      track: 'Early client portfolio track [Simultaneous Track]',
       impact: 'Built domain writing depth across education and technology categories',
       badge: 'Assignments',
     },
@@ -393,7 +393,7 @@ const portfolioWorkData = {
       role: 'Senior Content Writer',
       company: 'Rail Recipe',
       period: 'Aug 2021 - Jan 2022',
-      track: 'Foundation track',
+      track: 'Foundation track [Simultaneous Track]',
       impact: 'Supported lead growth and traffic improvements through content campaigns',
       badge: 'Early stage',
     },
@@ -403,7 +403,7 @@ const portfolioWorkData = {
       role: 'Freelance Content Writer',
       company: 'Teachmint',
       period: 'Jun 2021 - Dec 2022',
-      track: 'Parallel freelance track',
+      track: 'Parallel freelance track [Simultaneous Track]',
       impact: 'Delivered SEO-led educational writing with intent-focused structure',
       badge: 'Freelance',
     },
@@ -628,7 +628,7 @@ function applyThumbnail(img, media, item) {
 
 function createWorkCard(item) {
   const card = document.createElement('article');
-  card.className = 'work-card';
+  card.className = 'work-card zoom-trigger';
   card.setAttribute('role', 'listitem');
 
   const mediaLink = document.createElement('a');
@@ -636,71 +636,45 @@ function createWorkCard(item) {
   mediaLink.href = item.url;
   mediaLink.target = '_blank';
   mediaLink.rel = 'noopener noreferrer';
-  mediaLink.setAttribute('aria-label', `Open ${item.platform} video: ${item.title}`);
+  mediaLink.setAttribute('aria-label', `Watch ${item.platform} production: ${item.title}`);
 
   const media = document.createElement('div');
-  media.className = 'work-media is-fallback';
+  media.className = 'work-media';
 
   const thumbnail = document.createElement('img');
   thumbnail.className = 'work-thumb';
   thumbnail.loading = 'lazy';
   thumbnail.decoding = 'async';
-  thumbnail.alt = `${item.platform} thumbnail for ${item.title}`;
-  // Only set referrerPolicy for remote images (added in applyThumbnail for remote)
+  thumbnail.alt = `${item.platform} visual for ${item.title}`;
 
+  const overlay = document.createElement('div');
+  overlay.className = 'work-media-overlay';
+  overlay.innerHTML = `<span class="play-icon-wrap">${createIcon(item.platform === 'YouTube' ? 'youtube' : 'instagram').outerHTML}</span>`;
 
   const fallback = document.createElement('div');
   fallback.className = 'work-thumb-fallback';
+  fallback.innerHTML = `<span>Preview Draft</span>`; // Simplified fallback for cinematic feel
 
-  const fallbackIcon = document.createElement('span');
-  fallbackIcon.className = 'fallback-icon';
-  fallbackIcon.appendChild(createIcon(item.platform === 'YouTube' ? 'youtube' : 'instagram'));
-
-  const fallbackTitle = document.createElement('span');
-  fallbackTitle.className = 'fallback-title';
-  fallbackTitle.textContent = `${item.platform} preview`;
-
-  const fallbackCopy = document.createElement('span');
-  fallbackCopy.className = 'fallback-copy';
-  fallbackCopy.textContent = 'Preview unavailable. Open original post.';
-
-  fallback.append(fallbackIcon, fallbackTitle, fallbackCopy);
-
-  const playTag = document.createElement('span');
-  playTag.className = 'work-play-tag';
-  playTag.textContent = 'Watch';
-
-  media.append(thumbnail, fallback, playTag);
+  media.append(thumbnail, overlay, fallback);
   mediaLink.appendChild(media);
-
-  const platform = document.createElement('p');
-  platform.className = 'work-platform';
-  platform.textContent = item.platform;
-
-  const title = document.createElement('h4');
-  title.className = 'work-title';
-  title.textContent = item.title;
-
-  const category = document.createElement('p');
-  category.className = 'work-category';
-  category.textContent = item.category;
-
-  const metric = document.createElement('span');
-  metric.className = 'work-metric';
-  metric.textContent = item.metric;
 
   const content = document.createElement('div');
   content.className = 'work-content';
-  content.append(platform, title, category, metric);
 
-  const link = document.createElement('a');
-  link.className = 'work-link';
-  link.href = item.url;
-  link.target = '_blank';
-  link.rel = 'noopener noreferrer';
-  link.textContent = 'Open original post';
+  content.innerHTML = `
+    <div class="work-meta-top">
+      <span class="work-platform-badge">${item.platform}</span>
+      <span class="work-category-tag">${item.category}</span>
+    </div>
+    <h4 class="work-title">${item.title}</h4>
+    <div class="work-impact-bar">
+      <span class="impact-label">Performance Peak</span>
+      <span class="impact-value">${item.metric}</span>
+    </div>
+    <a href="${item.url}" target="_blank" class="work-action-link">Open Production &rarr;</a>
+  `;
 
-  card.append(mediaLink, content, link);
+  card.append(mediaLink, content);
 
   applyThumbnail(thumbnail, media, item);
   return card;
@@ -821,23 +795,27 @@ function createExpertiseCard(item) {
   title.textContent = item.capability;
   header.appendChild(title);
 
-  const deliveredLabel = document.createElement('p');
-  deliveredLabel.className = 'expertise-row-label label-with-icon';
-  deliveredLabel.append(createIcon('delivered', 'icon'), document.createTextNode('What Delivered'));
+  const body = document.createElement('div');
+  body.className = 'expertise-body';
 
-  const deliveredCopy = document.createElement('p');
-  deliveredCopy.className = 'expertise-row-copy';
-  deliveredCopy.textContent = item.delivered;
+  // High-impact delivery points
+  const points = item.delivered.split('.').filter(p => p.trim().length > 0);
+  const list = document.createElement('ul');
+  list.className = 'expertise-list';
+  points.forEach(point => {
+    const li = document.createElement('li');
+    li.textContent = point.trim();
+    list.appendChild(li);
+  });
 
-  const proofLabel = document.createElement('p');
-  proofLabel.className = 'expertise-row-label label-with-icon';
-  proofLabel.append(createIcon('proof', 'icon'), document.createTextNode('Outcome Highlights'));
+  const proofBox = document.createElement('div');
+  proofBox.className = 'expertise-proof-box';
+  proofBox.innerHTML = `
+    <span class="proof-label">Primary Outcome</span>
+    <span class="proof-val">${item.proof}</span>
+  `;
 
-  const proofValue = document.createElement('span');
-  proofValue.className = 'expertise-proof';
-  proofValue.textContent = item.proof;
-
-  card.append(header, deliveredLabel, deliveredCopy, proofLabel, proofValue);
+  card.append(header, list, proofBox);
   return card;
 }
 
@@ -986,40 +964,8 @@ function renderChannelPresence() {
   });
 }
 
-function renderCaseStudyData() {
-  const vedamMetrics = document.getElementById('vedamMetricsGrid');
-  const leadSplit = document.getElementById('vedamLeadSplitGrid');
-  const vedamSystems = document.getElementById('vedamSystemsGrid');
-  const addaImpact = document.getElementById('addaImpactGrid');
+// function renderCaseStudyData() removed - logic integrated into initializeCaseModal()
 
-  if (vedamMetrics) {
-    vedamMetrics.innerHTML = '';
-    portfolioWorkData.vedamMetrics.forEach((item) => {
-      vedamMetrics.appendChild(createMetricItem(item, 'ribbon-value', 'ribbon-label', 'ribbon-item'));
-    });
-  }
-
-  if (leadSplit) {
-    leadSplit.innerHTML = '';
-    portfolioWorkData.vedamLeadSplit.forEach((item) => {
-      leadSplit.appendChild(createMetricItem(item, 'lead-value', 'lead-label', 'lead-split-item'));
-    });
-  }
-
-  if (vedamSystems) {
-    vedamSystems.innerHTML = '';
-    portfolioWorkData.vedamSystems.forEach((item) => {
-      vedamSystems.appendChild(createSystemCard(item));
-    });
-  }
-
-  if (addaImpact) {
-    addaImpact.innerHTML = '';
-    portfolioWorkData.addaImpact.forEach((item) => {
-      addaImpact.appendChild(createMetricItem(item, 'impact-value', 'impact-label', 'impact-item'));
-    });
-  }
-}
 
 function renderExpertise() {
   const grid = document.getElementById('expertiseGrid');
@@ -1411,13 +1357,704 @@ function initializeReveal() {
   revealItems.forEach((item) => revealObserver.observe(item));
 }
 
+const caseStudyModals = {
+  vedam: {
+    title: 'Vedam School of Technology',
+    role: 'Social Media Senior Associate',
+    period: 'Apr 2025 – Present',
+    badge: 'Core Role',
+    summary: 'Built the entire social & content function from zero — generating 1.1M+ reach and 281 leads within the first operating cycle. Established Vedam as a leading institutional voice across six active channels.',
+    metrics: [
+      { label: 'Instagram Reach', val: '1.1M+', color: 'var(--accent)' },
+      { label: 'Total Leads', val: '281', color: '#1B4D3E' },
+      { label: 'YouTube Reach', val: '431K+', color: '#D44638' },
+      { label: 'Direct Pmts', val: '66%', color: '#F4B400' }
+    ],
+    systems: portfolioWorkData.vedamSystems,
+    platforms: [
+      {
+        name: 'Instagram',
+        items: [
+          'Built weekly 7-post architecture across six content buckets',
+          'Scaled from 230 to 6,100 followers while maintaining 3%+ engagement',
+          'Directed reels and connected Meta campaign CTAs to lead capture'
+        ]
+      },
+      {
+        name: 'YouTube',
+        items: [
+          'Built a Sept 2025 to Sept 2026 calendar with scripts and sequencing',
+          'Owned upload packaging: title, tags, thumbnail plan, and mapping',
+          'Maintained long-form CTR in the 4-6.7% range'
+        ]
+      },
+      {
+        name: 'LinkedIn',
+        items: [
+          'Established weekly cadence across thought leadership and student stories',
+          'Lifted cycle impressions from 21K to 130K+',
+          'Generated 66 direct leads and tracked lead-to-payment performance'
+        ]
+      }
+    ],
+    orm: {
+      text: 'The query "Vedam School of Technology review" was ranked at #1 on Google through a managed Quora answer. Supporting evidence includes Quora engagement metrics, Reddit discussion depth, and structured GMB monitoring.',
+      chips: [
+        'Google rank #1 for review-intent query',
+        '2.4K+ Quora views and 18 upvotes',
+        '132+ comments on tracked Reddit thread',
+        '50+ GMB reviews tracked by category'
+      ]
+    }
+  },
+  adda: {
+    title: 'Adda247 & CareerPower',
+    role: 'Marketing Copywriter',
+    period: 'Apr 2022 – Mar 2025',
+    badge: 'Corporate',
+    summary: 'Drove CTR from 0.7% to a 7% peak across push notification and CRM campaigns spanning SSC, Railways, Banking, and UPSC verticals. Managed lifecycle communication for millions of users.',
+    metrics: [
+      { label: 'Peak Push CTR', val: '7%', color: 'var(--accent)' },
+      { label: 'Revenue Uplift', val: '2×', color: '#1B4D3E' },
+      { label: 'Campaign Impr.', val: '241K', color: '#1A73E8' },
+      { label: 'Conversion', val: '4.2%', color: '#F4B400' }
+    ],
+    ctrProgress: [
+      { label: 'Baseline', val: '0.7%' },
+      { label: 'Consistent', val: '3-5%' },
+      { label: 'Peak', val: '7%', isPeak: true }
+    ],
+    ownership: [
+      'Push notification copy and CRM messaging for SSC, Railways, Banking, and UPSC',
+      'Lifecycle communication on WhatsApp and email with personalization tokens',
+      'DFP banner copy and campaign CTA frameworks',
+      'Seasonal campaigns: Independence Day, Gandhi Jayanti, and New Year',
+      'MoEngage performance reporting and optimization loops'
+    ],
+    credential: {
+      title: 'Certificate of Appreciation',
+      text: 'Recognized with the "Above and Beyond" award in May 2024 by Adda247 leadership: CEO Anil Nagar and COO Saurabh Bansal.'
+    }
+  }
+};
+
+function renderDonutChart(metrics) {
+  const container = document.createElement('div');
+  container.className = 'chart-donut-container';
+
+  const wrapper = document.createElement('div');
+  wrapper.className = 'chart-donut-wrapper';
+
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox', '0 0 40 40');
+  svg.setAttribute('width', '140');
+  svg.setAttribute('height', '140');
+
+  let offset = 0;
+  // Simple equal slices for visualization, or we could calculate based on values
+  const sliceSize = 100 / metrics.length;
+
+  metrics.forEach((m, i) => {
+    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    circle.setAttribute('cx', '20');
+    circle.setAttribute('cy', '20');
+    circle.setAttribute('r', '15.915');
+    circle.setAttribute('fill', 'transparent');
+    circle.setAttribute('stroke', m.color);
+    circle.setAttribute('stroke-width', '4');
+    circle.setAttribute('stroke-dasharray', `${sliceSize - 2} 100`);
+    circle.setAttribute('stroke-dashoffset', `-${offset}`);
+    svg.appendChild(circle);
+    offset += sliceSize;
+  });
+
+  const center = document.createElement('div');
+  center.className = 'chart-donut-center';
+  center.innerHTML = `<span class="val">${metrics[0].val}</span><span class="lbl">Primary</span>`;
+
+  wrapper.appendChild(svg);
+  wrapper.appendChild(center);
+
+  const legend = document.createElement('div');
+  legend.className = 'chart-legend';
+  metrics.forEach(m => {
+    const item = document.createElement('div');
+    item.className = 'legend-item';
+    item.innerHTML = `
+      <span class="legend-dot" style="background: ${m.color}"></span>
+      <span class="legend-label">${m.label}</span>
+      <span class="legend-meta">${m.val}</span>
+    `;
+    legend.appendChild(item);
+  });
+
+  container.appendChild(wrapper);
+  container.appendChild(legend);
+  return container;
+}
+
+function renderBarChart(data) {
+  const container = document.createElement('div');
+  container.className = 'chart-bar-container';
+
+  data.forEach((item, i) => {
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    // Use the index to stagger animation
+    const delay = i * 0.1;
+
+    row.innerHTML = `
+      <div class="bar-head">
+        <span class="bar-label">${item.label || item.title}</span>
+        <span class="bar-value">${item.value || (item.proof ? 'Built' : '')}</span>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill" style="transition-delay: ${delay}s"></div>
+      </div>
+    `;
+    container.appendChild(row);
+  });
+  return container;
+}
+
+function renderCTRChart(data) {
+  const container = document.createElement('div');
+  container.className = 'ctr-chart';
+
+  data.forEach(item => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'ctr-bar-wrapper';
+
+    const h = item.isPeak ? '100%' : (item.val.includes('-') ? '60%' : '30%');
+
+    wrapper.innerHTML = `
+      <div class="ctr-bar ${item.isPeak ? 'is-peak' : ''}" style="height: ${h}">
+        <span class="ctr-bar-val">${item.val}</span>
+      </div>
+      <span class="ctr-bar-label">${item.label}</span>
+    `;
+    container.appendChild(wrapper);
+  });
+  return container;
+}
+
+function initializeCaseModal() {
+  const overlay = document.getElementById('caseModalOverlay');
+  const modal = document.getElementById('caseModal');
+  const body = document.getElementById('caseModalBody');
+  const closeBtn = document.getElementById('caseModalClose');
+  const previews = document.querySelectorAll('.case-preview-card');
+
+  if (!overlay || !modal || !body || !closeBtn) return;
+
+  const openModal = (caseId) => {
+    const data = caseStudyModals[caseId];
+    if (!data) return;
+
+    body.innerHTML = `
+      <header class="modal-header">
+        <div class="modal-header-top">
+          <span class="case-preview-badge">${data.badge}</span>
+          <span class="modal-period">${data.period}</span>
+        </div>
+        <h2>${data.title}</h2>
+        <div class="modal-role-meta">
+          <span class="modal-role">${data.role}</span>
+        </div>
+        <p class="modal-summary">${data.summary}</p>
+      </header>
+
+      <section class="modal-section">
+        <h3 class="modal-section-title">
+          <svg class="icon"><use href="#icon-proof"></use></svg>
+          Outcomes & Metrics
+        </h3>
+        <div class="modal-data-grid">
+          <div class="chart-card">
+            <h4>Reach & Acquisition Split</h4>
+            <div id="donutPlaceholder"></div>
+          </div>
+          <div class="chart-card">
+            <h4>${caseId === 'vedam' ? 'Operational Yield' : 'CTR Progression'}</h4>
+            <div id="metricChartPlaceholder"></div>
+          </div>
+        </div>
+      </section>
+    `;
+
+    // Inject charts
+    const donutPlace = body.querySelector('#donutPlaceholder');
+    const metricPlace = body.querySelector('#metricChartPlaceholder');
+
+    donutPlace.appendChild(renderDonutChart(data.metrics));
+    if (caseId === 'vedam') {
+      metricPlace.appendChild(renderBarChart(data.metrics));
+    } else {
+      metricPlace.appendChild(renderCTRChart(data.ctrProgress));
+    }
+
+    // Add remaining sections
+    if (data.systems) {
+      const sysSection = document.createElement('section');
+      sysSection.innerHTML = `
+        <h3 class="modal-section-title">
+          <svg class="icon"><use href="#icon-system"></use></svg>
+          Systems & Governance Built
+        </h3>
+        <div class="modal-systems-matrix"></div>
+      `;
+      const sysGrid = sysSection.querySelector('.modal-systems-matrix');
+      data.systems.forEach(sys => {
+        const card = document.createElement('div');
+        card.className = 'modal-system-card';
+        card.innerHTML = `
+          <div class="msc-head">
+            <svg class="icon"><use href="#icon-${sys.icon || 'system'}"></use></svg>
+            <span>${sys.title}</span>
+          </div>
+          <p class="msc-desc">${sys.description}</p>
+          <div class="msc-proof">${sys.proof || 'Standardised'}</div>
+        `;
+        sysGrid.appendChild(card);
+      });
+      body.appendChild(sysSection);
+    }
+
+    if (data.platforms) {
+      const platSection = document.createElement('section');
+      platSection.innerHTML = `
+        <h3 class="modal-section-title">
+          <svg class="icon"><use href="#icon-delivered"></use></svg>
+          Platform Execution
+        </h3>
+        <div class="modal-platform-grid"></div>
+      `;
+      const platGrid = platSection.querySelector('.modal-platform-grid');
+      data.platforms.forEach(plat => {
+        const item = document.createElement('div');
+        item.className = 'modal-platform-item';
+        item.innerHTML = `
+          <h4>${plat.name}</h4>
+          <ul>${plat.items.map(li => `<li>${li}</li>`).join('')}</ul>
+        `;
+        platGrid.appendChild(item);
+      });
+      body.appendChild(platSection);
+    }
+
+    if (data.orm) {
+      const ormSection = document.createElement('section');
+      ormSection.className = 'modal-orm-section';
+      ormSection.innerHTML = `
+        <h3 class="modal-section-title" style="margin-top: 0">ORM & Brand Safety</h3>
+        <p>${data.orm.text}</p>
+        <div class="modal-orm-chips">
+          ${data.orm.chips.map(chip => `<span class="modal-orm-chip">${chip}</span>`).join('')}
+        </div>
+      `;
+      body.appendChild(ormSection);
+    }
+
+    if (data.ownership) {
+      const ownSection = document.createElement('section');
+      ownSection.innerHTML = `
+        <h3 class="modal-section-title">Ownership & Scope</h3>
+        <div class="modal-platform-grid">
+           <div class="modal-platform-item" style="grid-column: 1 / -1">
+             <ul>${data.ownership.map(li => `<li>${li}</li>`).join('')}</ul>
+           </div>
+        </div>
+      `;
+      body.appendChild(ownSection);
+    }
+
+    if (data.credential) {
+      const credSection = document.createElement('section');
+      credSection.className = 'modal-credential';
+      credSection.innerHTML = `
+        <div class="modal-credential-icon">
+          <svg class="icon" style="width: 24px; height: 24px;"><use href="#icon-expertise"></use></svg>
+        </div>
+        <div class="modal-credential-content">
+          <h4>${data.credential.title}</h4>
+          <p>${data.credential.text}</p>
+        </div>
+      `;
+      body.appendChild(credSection);
+    }
+
+    overlay.classList.add('is-active');
+    document.body.classList.add('modal-open');
+    overlay.setAttribute('aria-hidden', 'false');
+
+    // Trigger bar animations
+    requestAnimationFrame(() => {
+      body.querySelectorAll('.bar-fill').forEach(fill => {
+        fill.parentElement.parentElement.classList.add('is-active');
+      });
+    });
+
+    closeBtn.focus();
+  };
+
+  const closeModal = () => {
+    overlay.classList.remove('is-active');
+    document.body.classList.remove('modal-open');
+    overlay.setAttribute('aria-hidden', 'true');
+    body.innerHTML = '';
+  };
+
+  previews.forEach(card => {
+    card.addEventListener('click', () => {
+      const id = card.id.replace('Preview', '');
+      openModal(id);
+    });
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        const id = card.id.replace('Preview', '');
+        openModal(id);
+      }
+    });
+  });
+
+  closeBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeModal();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay.classList.contains('is-active')) {
+      closeModal();
+    }
+  });
+}
+
+const strategicSystemsData = {
+  sysInsta: {
+    title: 'Instagram Operating System',
+    badge: 'System 01',
+    purpose: 'Vedam\'s primary acquisition channel. Governs content rhythm, performance tracking, and competitive positioning. Scaled from 78 to 6,400+ followers in 10 months.',
+    sections: [
+      {
+        title: 'Weekly Posting Rhythm (INSTA MOM)',
+        type: 'table',
+        headers: ['Day', 'Content Bucket', 'Core Topic'],
+        rows: [
+          ['Mon', 'Student Content', 'Campus Life / Vox Pop'],
+          ['Tue', 'Student Story', 'Spotlights & Achievements'],
+          ['Wed', 'Student x Vedam', 'Interaction / Highlights'],
+          ['Thu', 'Student Story', 'Startups & Tech Projects'],
+          ['Fri', 'Tech / AI', 'Weekly Tech/AI News'],
+          ['Sat', 'Campus Events', 'Event Recap Reels'],
+          ['Sun', 'Vedam Updates', 'Weekly Recap Carousel']
+        ]
+      },
+      {
+        title: 'Strategic Content Buckets',
+        type: 'table',
+        headers: ['Bucket', 'Category', 'Objective'],
+        rows: [
+          ['Milestones', 'Acquisition', '30/100 Days highlights'],
+          ['Parents', 'Acquisition', 'Credibility via testimonials'],
+          ['Tech / AI', 'Acquisition', 'Position as AI-focused'],
+          ['Student Story', 'Acquisition', 'Show quality of cohorts'],
+          ['Campus Events', 'Branding', 'Direct vibe / Highlight life'],
+          ['Student Clubs', 'Branding', 'In-depth community proof']
+        ]
+      },
+      {
+        title: 'Growth Performance (Monthly)',
+        type: 'table',
+        headers: ['Metric', 'March 25', 'July 25', 'Jan 26'],
+        rows: [
+          ['Total Views', '4,369', '2.3M', '7.7M'],
+          ['Organic Views', '4,369', '63.5K', '138K'],
+          ['Followers', '78', '3,543', '6,400+']
+        ]
+      },
+      {
+        title: 'Competitor Benchmark (Dec 25)',
+        type: 'metrics',
+        items: [
+          { label: 'Vedam Engagement', val: 'Strong' },
+          { label: 'Scaler Followers', val: '21.8K' },
+          { label: 'Content quality win', val: 'Achieved' }
+        ]
+      }
+    ]
+  },
+  sysReview: {
+    title: 'Brand & Social Review (MOM System)',
+    badge: 'System 02',
+    purpose: 'Comprehensive retrospective system (Mar–Aug 2025). Combines Meeting of Minutes (MOM) for branding tasks with consolidated platform analytics.',
+    sections: [
+      {
+        title: 'Key Branding Initiatives Tracked',
+        type: 'list',
+        items: [
+          'VSAT Sample Paper & Prep Kit documentation',
+          'Standardized Email Signatures & LinkedIn Cover architecture',
+          'Branded Merchandise: T-shirts, Mugs, ID Cards development',
+          'Office Experience: 8 wall creatives and 5 dangler frameworks',
+          'Counseling Room: Structured aesthetics for conversion'
+        ]
+      },
+      {
+        title: 'Operational Yield Spikes',
+        type: 'list',
+        items: [
+          'June-July View Spike: Driven by paid promotion integration',
+          'UGC vs Promo: Confirmed student-authentic content drives 2x better engagement than polished posts',
+          'Analytics Consolidation: Unified view of Insta, YT, and LinkedIn trends'
+        ]
+      }
+    ]
+  },
+  sysDistro: {
+    title: 'Multi-Channel Distribution Network',
+    badge: 'System 03',
+    purpose: 'Operationalizes the core principle: "Create once, distribute everywhere". Prevents content siloing and maximizes reach across 12-15 touchpoints.',
+    sections: [
+      {
+        title: '15-Touchpoint Distribution Plan',
+        type: 'list',
+        items: [
+          'Organic: IG Story, DM push, Broadcast channel, Telegram',
+          'Cross-Platform: Snippets to Reels, LinkedIn Post + Link-in-Bio',
+          'Inorganic: Telegram Student Groups, Meta Boosts, LinkedIn Boosts',
+          'SEO Layer: YouTube Shorts interlinking, Reddit/Quora embeddings'
+        ]
+      },
+      {
+        title: 'Why It Matters (Impact)',
+        type: 'metrics',
+        items: [
+          { label: 'Landmark Views', val: '4.75M' },
+          { label: 'Distribution Hubs', val: '15+' },
+          { label: 'Platform Efficiency', val: 'Max' }
+        ]
+      }
+    ]
+  },
+  sysMaster: {
+    title: 'The Command Hub (Master Sheet)',
+    badge: 'System 04',
+    purpose: 'The central command hub for Vedam\'s branding operation. A directory pointing to every spreadsheet, drive folder, tracker, and asset library.',
+    sections: [
+      {
+        title: 'Hub Infrastructure',
+        type: 'list',
+        items: [
+          'Asset Library: Google Drive & Mega.nz folders for ADYPU Drone Shots, Instructor photos, and Campus B-roll',
+          'Execution Calendars: Real-time links to YouTube, Insta, and LinkedIn plans',
+          'Tracking Layer: Website traffic from brands, UTM trackers, and GMB metrics',
+          'Team SOPs: Standard Operating Procedures for social team governance'
+        ]
+      },
+      {
+        title: 'Content Storage Categories',
+        type: 'table',
+        headers: ['Asset Type', 'Storage Hub', 'Status'],
+        rows: [
+          ['Drone Shots', 'Mega.nz', 'Active'],
+          ['Instructor Photos', 'Google Drive', 'Structured'],
+          ['Event Montages', 'Google Drive', 'WIP'],
+          ['Brand Logo Files', 'Google Drive', 'Standardized']
+        ]
+      }
+    ]
+  },
+  sysLinkedin: {
+    title: 'LinkedIn B2B Authority Plan',
+    badge: 'System 05',
+    purpose: 'Targets parents, professional students, and industry observers. Shifted from mass-viral to brand-building and thought leadership.',
+    sections: [
+      {
+        title: 'Content Pillar Hierarchy',
+        type: 'table',
+        headers: ['Pillar', 'Objective', 'Frequency'],
+        rows: [
+          ['Founder Leadership', 'Authority positioning', '2x / Week'],
+          ['Student Startup Story', 'Outcome proof', '3x / Week'],
+          ['Tech News Blog', 'Curriculum trust', '2x / Week'],
+          ['Guest Mentors', 'Network credibility', 'Variable']
+        ]
+      },
+      {
+        title: 'Performance Landmarks',
+        type: 'metrics',
+        items: [
+          { label: 'Engagement Rate', val: '13.1%' },
+          { label: 'Monthly Imp.', val: '90K+' },
+          { label: 'Follower Growth', val: '5.3x' }
+        ]
+      },
+      {
+        title: 'Competitor Status (Dec 25)',
+        type: 'table',
+        headers: ['Competitor', 'Followers', 'Eng. Rate'],
+        rows: [
+          ['Scaler SOT', '14,390', '17.2%'],
+          ['Vedam SOT', '3,047', '17.1%'],
+          ['Mirai SOT', '3,260', '5.3%']
+        ]
+      }
+    ]
+  },
+  sysORM: {
+    title: 'Online Reputation Management (ORM)',
+    badge: 'System 06',
+    purpose: 'Governs presence on Quora, Reddit, and GMB. Goal: dominate the first page of Google search for all review-intent queries.',
+    sections: [
+      {
+        title: 'Quora SEO Dominance',
+        type: 'list',
+        items: [
+          'Tactics: 3 new questions/month + 5 answers/month on review-intent queries',
+          'Results: Ranking #1 on Google for "Vedam review" queries via Quora',
+          'Engagement: 6,684 total views and 80+ upvotes on core threads'
+        ]
+      },
+      {
+        title: 'GMB & Reddit Monitoring',
+        type: 'list',
+        items: [
+          'GMB Pune: 106 reviews at a perfect 5.0 rating',
+          'GMB Gurgaon: 53 reviews at 4.9 rating',
+          'Reddit: Monitoring Btechtards/JEENEETards with factual rebuttals',
+          'Sentiment: Weekly mapping across 4 platforms'
+        ]
+      }
+    ]
+  },
+  sysYoutube: {
+    title: 'YouTube Growth Matrix',
+    badge: 'System 07',
+    purpose: 'Comprehensive T-o-F awareness (Shorts) and Mid-Funnel conversion (Long-form). Achieved #1 channel reach benchmark in Dec 2025.',
+    sections: [
+      {
+        title: 'Dec 25 Milestone: The Landmark Month',
+        type: 'metrics',
+        items: [
+          { label: 'Total Month Views', val: '4.75M' },
+          { label: 'Subscribers Gained', val: '4,399' },
+          { label: 'Channel Growth', val: '4.5x' }
+        ]
+      },
+      {
+        title: 'YouTube UGC & Expansion (2026)',
+        type: 'list',
+        items: [
+          'UGC Pipeline: Student vlogs (Abhiraj, Sidhant) for authentic proof',
+          'MAANG Series: Guest lectures from CTOs/Founders (Jasbir Cars24, etc.)',
+          'Curriculum Deep-dives: Subhesh explains coding/ICPC pathways',
+          'Tech Fest Noesis: Highlights and trailers integration'
+        ]
+      },
+      {
+        title: 'Video Content Playlists',
+        type: 'table',
+        headers: ['Playlist Name', 'Strategic Bucket', 'Focus'],
+        rows: [
+          ['The Vedam Journey', 'Milestones', 'Emotional Proof'],
+          ['Builders at Vedam', 'Student Story', 'Startup Founders'],
+          ['Life of a Vedamian', 'Student x Vedam', 'Vibe / Tours'],
+          ['Industry Leaders', 'Campus Events', 'External validation']
+        ]
+      }
+    ]
+  }
+};
+
+function initializeSystemModal() {
+  const overlay = document.getElementById('caseModalOverlay');
+  const modal = document.getElementById('caseModal');
+  const body = document.getElementById('caseModalBody');
+  const closeBtn = document.getElementById('caseModalClose');
+  const previews = document.querySelectorAll('.system-preview-card');
+
+  if (!overlay || !modal || !body || !closeBtn) return;
+
+  const openSystemModal = (sysId) => {
+    const data = strategicSystemsData[sysId];
+    if (!data) return;
+
+    body.innerHTML = `
+      <header class="modal-header">
+        <div class="modal-header-top">
+          <span class="sys-badge" style="background: var(--accent-faded); color: var(--accent-strong)">${data.badge}</span>
+        </div>
+        <h2>${data.title}</h2>
+        <p class="modal-summary">${data.purpose}</p>
+      </header>
+      <div id="systemContent"></div>
+    `;
+
+    const container = body.querySelector('#systemContent');
+
+    data.sections.forEach(sec => {
+      const sectionEl = document.createElement('section');
+      sectionEl.className = 'modal-section';
+
+      const title = document.createElement('h3');
+      title.className = 'modal-section-title';
+      title.innerHTML = `<svg class="icon"><use href="#icon-system"></use></svg> ${sec.title}`;
+      sectionEl.appendChild(title);
+
+      if (sec.type === 'table') {
+        const table = document.createElement('table');
+        table.className = 'modal-data-table';
+        table.innerHTML = `
+          <thead><tr>${sec.headers.map(h => `<th>${h}</th>`).join('')}</tr></thead>
+          <tbody>${sec.rows.map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('')}</tbody>
+        `;
+        sectionEl.appendChild(table);
+      } else if (sec.type === 'metrics') {
+        const grid = document.createElement('div');
+        grid.className = 'modal-system-summary-grid';
+        sec.items.forEach(m => {
+          grid.innerHTML += `
+            <div class="modal-sys-metric-card">
+              <span class="modal-sys-metric-val">${m.val}</span>
+              <span class="modal-sys-metric-lbl">${m.label}</span>
+            </div>
+          `;
+        });
+        sectionEl.appendChild(grid);
+      } else if (sec.type === 'list') {
+        const listDiv = document.createElement('div');
+        listDiv.className = 'modal-technical-list';
+        listDiv.innerHTML = `<ul>${sec.items.map(li => `<li>${li}</li>`).join('')}</ul>`;
+        sectionEl.appendChild(listDiv);
+      }
+
+      container.appendChild(sectionEl);
+    });
+
+    overlay.classList.add('is-active');
+    document.body.classList.add('modal-open');
+    overlay.setAttribute('aria-hidden', 'false');
+    closeBtn.focus();
+  };
+
+  previews.forEach(card => {
+    card.addEventListener('click', () => openSystemModal(card.id.replace('Preview', '')));
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openSystemModal(card.id.replace('Preview', ''));
+      }
+    });
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   renderExpertise();
   renderTimeline();
   renderWritingSamples();
   renderWorkItems();
   renderChannelPresence();
-  renderCaseStudyData();
 
   initializeStickyNav();
   initializeMobileMenu();
@@ -1425,4 +2062,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initializeActiveNavLink();
   initializeCarouselSystem();
   initializeReveal();
+  initializeCaseModal();
+  initializeSystemModal();
 });
+
+
