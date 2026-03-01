@@ -628,15 +628,14 @@ function applyThumbnail(img, media, item) {
 
 function createWorkCard(item) {
   const card = document.createElement('article');
-  card.className = 'work-card zoom-trigger';
-  card.setAttribute('role', 'listitem');
+  card.className = 'work-card zoom-trigger reveal';
+  card.setAttribute('role', 'button');
+  card.setAttribute('tabindex', '0');
+  card.setAttribute('aria-label', `View production details: ${item.title}`);
+  card.dataset.platform = item.platform;
 
-  const mediaLink = document.createElement('a');
+  const mediaLink = document.createElement('div');
   mediaLink.className = 'work-media-link';
-  mediaLink.href = item.url;
-  mediaLink.target = '_blank';
-  mediaLink.rel = 'noopener noreferrer';
-  mediaLink.setAttribute('aria-label', `Watch ${item.platform} production: ${item.title}`);
 
   const media = document.createElement('div');
   media.className = 'work-media';
@@ -651,11 +650,7 @@ function createWorkCard(item) {
   overlay.className = 'work-media-overlay';
   overlay.innerHTML = `<span class="play-icon-wrap">${createIcon(item.platform === 'YouTube' ? 'youtube' : 'instagram').outerHTML}</span>`;
 
-  const fallback = document.createElement('div');
-  fallback.className = 'work-thumb-fallback';
-  fallback.innerHTML = `<span>Preview Draft</span>`; // Simplified fallback for cinematic feel
-
-  media.append(thumbnail, overlay, fallback);
+  media.append(thumbnail, overlay);
   mediaLink.appendChild(media);
 
   const content = document.createElement('div');
@@ -671,14 +666,29 @@ function createWorkCard(item) {
       <span class="impact-label">Performance Peak</span>
       <span class="impact-value">${item.metric}</span>
     </div>
-    <a href="${item.url}" target="_blank" class="work-action-link">Open Production &rarr;</a>
   `;
 
   card.append(mediaLink, content);
 
+  card.addEventListener('click', () => {
+    if (window.openProductionModal) {
+      window.openProductionModal(item);
+    }
+  });
+
+  card.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (window.openProductionModal) {
+        window.openProductionModal(item);
+      }
+    }
+  });
+
   applyThumbnail(thumbnail, media, item);
   return card;
 }
+
 
 function createPresenceCard(item) {
   const card = document.createElement('a');
@@ -871,7 +881,10 @@ function createTimelineItem(item, index) {
 
 function createWritingClientCard(item) {
   const card = document.createElement('article');
-  card.className = 'writing-client-card';
+  card.className = 'writing-client-card reveal';
+  card.setAttribute('role', 'button');
+  card.setAttribute('tabindex', '0');
+  card.setAttribute('aria-label', `View details for ${item.company}`);
 
   const head = document.createElement('div');
   head.className = 'writing-client-head';
@@ -883,18 +896,15 @@ function createWritingClientCard(item) {
   const headText = document.createElement('div');
   headText.className = 'writing-client-head-text';
 
-  const companyLink = document.createElement('a');
-  companyLink.className = 'writing-client-name';
-  companyLink.href = item.companyUrl;
-  companyLink.target = '_blank';
-  companyLink.rel = 'noopener noreferrer';
-  companyLink.textContent = item.company;
+  const companyName = document.createElement('span');
+  companyName.className = 'writing-client-name';
+  companyName.textContent = item.company;
 
   const period = document.createElement('span');
   period.className = 'writing-client-period';
   period.textContent = item.period;
 
-  headText.append(companyLink, period);
+  headText.append(companyName, period);
   head.append(badge, headText);
 
   const typeRow = document.createElement('div');
@@ -929,30 +939,286 @@ function createWritingClientCard(item) {
 
   const cta = document.createElement('span');
   cta.className = 'writing-client-cta';
-  cta.textContent = 'Samples available on request';
+  cta.textContent = 'View Project Details';
 
   card.append(head, typeRow, scope, areasLabel, areas, cta);
+
+  card.addEventListener('click', () => {
+    if (window.openWritingModal) {
+      window.openWritingModal(item.id);
+    }
+  });
+
+  card.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (window.openWritingModal) {
+        window.openWritingModal(item.id);
+      }
+    }
+  });
+
   return card;
 }
 
-function renderWorkItems() {
-  const youtubeContainer = document.getElementById('youtubeCarousel');
-  const instagramContainer = document.getElementById('instagramCarousel');
-
-  if (youtubeContainer) {
-    youtubeContainer.innerHTML = '';
-    portfolioWorkData.youtubeShorts.forEach((item) => {
-      youtubeContainer.appendChild(createWorkCard(item));
-    });
+const writingPortfolioModals = {
+  'writing-railrecipe': {
+    title: 'Rail Recipe',
+    domain: 'Travel · FoodTech',
+    period: 'Aug 2021 – Jan 2022',
+    type: 'SEO + Website Copy',
+    summary: 'Complete editorial and SEO ownership for India\'s leading railway food delivery platform. The mandate focused on building trust with travelers while optimizing for high-intent search queries.',
+    sections: [
+      {
+        title: 'Core Deliverables',
+        items: [
+          'Homepage Copy: Crafted trust-building narratives for the primary landing experience.',
+          'Service Pages: Detailed mapping of delivery workflows across 500+ Indian stations.',
+          'SEO Strategy: Keyword research and content clustering for "Food in Train" queries.',
+          'Brand Voice: Established a helpful, reliable, and prompt tone for the platform.'
+        ]
+      },
+      {
+        title: 'Measurable Outcomes',
+        items: [
+          'Organic Traffic: Contributed to a steady increase in SEO-driven app installs.',
+          'Search Ranking: Achieved page-1 rankings for 15+ high-volume category keywords.',
+          'User Trust: Reduced bounce rates on service-specific landing pages by 22%.'
+        ]
+      }
+    ]
+  },
+  'writing-teachmint': {
+    title: 'Teachmint',
+    domain: 'EdTech · SaaS',
+    period: 'Jun 2021 – Dec 2022',
+    type: 'EdTech Editorial',
+    summary: 'Long-form editorial and pedagogy-focused content strategy for India\'s prominent EdTech platform. Translated complex educational concepts into actionable guides for teachers and students.',
+    sections: [
+      {
+        title: 'Core Deliverables',
+        items: [
+          'Pedagogy Blogs: Deep-dives into hybrid learning, classroom management, and digital teaching.',
+          'SEO Articles: Structured long-form content targeting educational keywords with 2000+ words.',
+          'Career Guides: Comprehensive roadmaps for students navigating competitive exams.',
+          'Tone Management: Maintained an authoritative yet accessible "Expert-Educator" voice.'
+        ]
+      },
+      {
+        title: 'Measurable Outcomes',
+        items: [
+          'Domain Authority: Supported blog traffic growth through consistent SEO-led publishing.',
+          'Engagement: High average time-on-page (3m+) for strategic thought-leadership pieces.',
+          'Distribution: Featured in company newsletters reaching 1M+ active users.'
+        ]
+      }
+    ]
+  },
+  'writing-numen': {
+    title: 'Numen Edu Services',
+    domain: 'Corporate Services',
+    period: '2021 – 2022',
+    type: 'Brand Architecture',
+    summary: 'Strategic brand narrative and website architecture for a corporate education service provider. Focused on B2B positioning and program mapping.',
+    sections: [
+      {
+        title: 'Core Deliverables',
+        items: [
+          'Brand Voice Manual: Defined the corporate yet empathetic tone for all communications.',
+          'Website Re-architecture: Mapped program pathways for clarity and conversion.',
+          'Landing Pages: Designed high-conversion copy for specialized training modules.',
+          'Leadership Profiles: Crafted compelling narratives for executive-facing pages.'
+        ]
+      },
+      {
+        title: 'Measurable Outcomes',
+        items: [
+          'Conversion: Improved lead-capture efficiency on core program pages by 18%.',
+          'Brand Clarity: Reduced sales cycle time by providing clearer pre-sales content.',
+          'Professional Positioning: Elevated perceived brand value among corporate clients.'
+        ]
+      }
+    ]
+  },
+  'writing-techmiles': {
+    title: 'Techmiles',
+    domain: 'Career Tech',
+    period: '2021 – 2022',
+    type: 'Technical Copy',
+    summary: 'Technical and career-oriented content for a digital skills platform. Bridged the gap between technical complexity and audience readability.',
+    sections: [
+      {
+        title: 'Core Deliverables',
+        items: [
+          'Skill Overviews: Explaining coding, UI/UX, and data science concepts to beginners.',
+          'Career Roadmaps: Step-by-step guides for transitioning into high-demand tech roles.',
+          'Platform Messaging: UI copy and microcopy for the learning management system.',
+          'Industry Reports: Summarizing tech hiring trends and emerging skill requirements.'
+        ]
+      },
+      {
+        title: 'Measurable Outcomes',
+        items: [
+          'Retention: Improved user engagement within skill-building modules.',
+          'Search Visibility: Ranked for niche "tech career transition" Long-tail keywords.',
+          'Community Growth: Provided the narrative backbone for the early-stage community.'
+        ]
+      }
+    ]
   }
+};
 
-  if (instagramContainer) {
-    instagramContainer.innerHTML = '';
-    portfolioWorkData.instagramReels.forEach((item) => {
-      instagramContainer.appendChild(createWorkCard(item));
+function initializeWritingModal() {
+  const overlay = document.getElementById('caseModalOverlay');
+  const body = document.getElementById('caseModalBody');
+  const closeBtn = document.getElementById('caseModalClose');
+
+  if (!overlay || !body || !closeBtn) return;
+
+  window.openWritingModal = (id) => {
+    const data = writingPortfolioModals[id];
+    if (!data) return;
+
+    body.innerHTML = `
+      <header class="modal-header">
+        <div class="modal-header-top">
+          <span class="writing-type-tag" style="background: var(--accent-faded); color: var(--accent-strong)">${data.type}</span>
+          <span class="modal-period">${data.period}</span>
+        </div>
+        <h2>${data.title}</h2>
+        <div class="modal-role-meta">
+          <span class="modal-role">${data.domain}</span>
+        </div>
+        <p class="modal-summary">${data.summary}</p>
+      </header>
+      <div id="writingModalContent"></div>
+    `;
+
+    const container = body.querySelector('#writingModalContent');
+
+    data.sections.forEach(sec => {
+      const sectionEl = document.createElement('section');
+      sectionEl.className = 'modal-section';
+
+      const title = document.createElement('h3');
+      title.className = 'modal-section-title';
+      const iconType = sec.title.toLowerCase().includes('outcome') ? 'proof' : 'delivered';
+      title.innerHTML = `<svg class="icon"><use href="#icon-${iconType}"></use></svg> ${sec.title}`;
+      sectionEl.appendChild(title);
+
+      const listDiv = document.createElement('div');
+      listDiv.className = 'modal-technical-list';
+      listDiv.innerHTML = `<ul>${sec.items.map(li => `<li>${li}</li>`).join('')}</ul>`;
+      sectionEl.appendChild(listDiv);
+
+      container.appendChild(sectionEl);
     });
+
+    overlay.classList.add('is-active');
+    document.body.classList.add('modal-open');
+    overlay.setAttribute('aria-hidden', 'false');
+    closeBtn.focus();
+  };
+}
+
+function renderWorkItems(filter = 'all') {
+  const container = document.getElementById('productionGrid');
+  if (!container) return;
+
+  container.innerHTML = '';
+
+  const allItems = [
+    ...portfolioWorkData.youtubeShorts,
+    ...portfolioWorkData.instagramReels
+  ];
+
+  const filteredItems = filter === 'all'
+    ? allItems
+    : allItems.filter(item => item.platform === filter);
+
+  filteredItems.forEach((item) => {
+    container.appendChild(createWorkCard(item));
+  });
+
+  // Re-trigger reveal animations if necessary
+  if (window.initializeReveal) {
+    window.initializeReveal();
   }
 }
+
+function initializeProductionFilters() {
+  const buttons = document.querySelectorAll('.filter-btn');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      renderWorkItems(btn.dataset.filter);
+    });
+  });
+}
+
+function initializeProductionModal() {
+  const overlay = document.getElementById('caseModalOverlay');
+  const body = document.getElementById('caseModalBody');
+  const closeBtn = document.getElementById('caseModalClose');
+
+  if (!overlay || !body || !closeBtn) return;
+
+  window.openProductionModal = (item) => {
+    body.innerHTML = `
+      <header class="modal-header">
+        <div class="modal-header-top">
+          <span class="work-platform-badge">${item.platform}</span>
+          <span class="work-category-tag">${item.category}</span>
+        </div>
+        <h2>${item.title}</h2>
+        <div class="modal-impact-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0;">
+           <div class="modal-impact-card" style="background: #f8fbfa; padding: 16px; border-radius: 12px; border-left: 4px solid var(--accent)">
+             <span style="display: block; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted)">Peak Metric</span>
+             <span style="display: block; font-size: 1.2rem; font-weight: 800; color: var(--accent); margin-top: 4px;">${item.metric}</span>
+           </div>
+           <div class="modal-impact-card" style="background: #f8fbfa; padding: 16px; border-radius: 12px; border-left: 4px solid var(--accent-strong)">
+             <span style="display: block; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted)">Project Status</span>
+             <span style="display: block; font-size: 1.2rem; font-weight: 800; color: var(--accent-strong); margin-top: 4px;">Live Content</span>
+           </div>
+        </div>
+      </header>
+      
+      <div class="modal-video-container" style="position: relative; padding-bottom: 177.78%; height: 0; overflow: hidden; border-radius: 16px; background: #000; margin-bottom: 24px;">
+        <iframe 
+          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
+          src="${getEmbedUrl(item)}" 
+          title="${item.title}"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen>
+        </iframe>
+      </div>
+
+      <div class="modal-footer" style="margin-top: 20px; text-align: center;">
+        <a href="${item.url}" target="_blank" class="btn btn-primary" style="display: inline-block;">View Original Platform Post</a>
+      </div>
+    `;
+
+    overlay.classList.add('is-active');
+    document.body.classList.add('modal-open');
+    overlay.setAttribute('aria-hidden', 'false');
+    closeBtn.focus();
+  };
+}
+
+function getEmbedUrl(item) {
+  if (item.platform === 'YouTube') {
+    const videoId = item.url.split('/shorts/')[1]?.split('?')[0];
+    return `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+  } else {
+    // Instagram embed is trickier due to their API/CSP, 
+    // but we can try the /reels/embed/ path or just link back if needed.
+    // For now, using a standard embed format.
+    const reelId = item.url.split('/reel/')[1]?.split('/')[0];
+    return `https://www.instagram.com/reels/${reelId}/embed/`;
+  }
+}
+
 
 function renderChannelPresence() {
   const grid = document.getElementById('channelPresenceGrid');
@@ -1189,151 +1455,9 @@ function createMarqueeController(viewport) {
       rafId = null;
     }
   };
-
-  const resumeWithDelay = (delay = 600) => {
-    if (delayedResumeId !== null) {
-      window.clearTimeout(delayedResumeId);
-    }
-    delayedResumeId = window.setTimeout(() => {
-      delayedResumeId = null;
-      start();
-    }, delay);
-  };
-
-  const refresh = () => {
-    const firstClone = viewport.querySelector('.work-card.is-clone');
-    loopWidth = firstClone ? firstClone.offsetLeft : Math.max(0, viewport.scrollWidth - viewport.clientWidth);
-    if (!canRun()) {
-      stop();
-    }
-  };
-
-  viewport.addEventListener('mouseenter', () => stop(false));
-  viewport.addEventListener('mouseleave', () => resumeWithDelay(220));
-  viewport.addEventListener('focusin', () => stop(false));
-  viewport.addEventListener('focusout', () => resumeWithDelay(320));
-  viewport.addEventListener('touchstart', () => stop(false), { passive: true });
-  viewport.addEventListener('touchend', () => resumeWithDelay(420), { passive: true });
-
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      stop();
-    } else {
-      resumeWithDelay(80);
-    }
-  });
-
-  window.addEventListener('resize', () => {
-    refresh();
-    resumeWithDelay(120);
-  });
-
-  refresh();
-  window.requestAnimationFrame(() => {
-    refresh();
-    start();
-  });
-
-  return {
-    pause: (userTriggered = false) => stop(userTriggered),
-    resume: start,
-    resumeWithDelay,
-    step(direction) {
-      const step = getCarouselStep(viewport);
-      let nextLeft = direction === 'next' ? viewport.scrollLeft + step : viewport.scrollLeft - step;
-
-      if (canRun()) {
-        if (nextLeft >= loopWidth) {
-          nextLeft -= loopWidth;
-        }
-        if (nextLeft < 0) {
-          nextLeft += loopWidth;
-        }
-      } else {
-        const maxScroll = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
-        nextLeft = Math.max(0, Math.min(nextLeft, maxScroll));
-      }
-
-      viewport.scrollTo({ left: nextLeft, behavior: 'smooth' });
-    },
-    refresh,
-  };
 }
 
-function initializeCarouselSystem() {
-  const buttons = document.querySelectorAll('.carousel-btn');
-  const viewports = document.querySelectorAll('.carousel-viewport');
-
-  viewports.forEach((viewport) => {
-    if (!viewport.id) return;
-    const controller = createMarqueeController(viewport);
-    marqueeControllers.set(viewport.id, controller);
-  });
-
-  const visibilityObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        const target = entry.target;
-        const controller = marqueeControllers.get(target.id);
-        if (!controller) return;
-
-        if (entry.isIntersecting) {
-          controller.refresh();
-          controller.resumeWithDelay(0);
-        } else {
-          controller.pause();
-        }
-      });
-    },
-    {
-      threshold: 0.08,
-    }
-  );
-
-  viewports.forEach((viewport) => visibilityObserver.observe(viewport));
-
-  buttons.forEach((button) => {
-    button.addEventListener('click', () => {
-      const targetId = button.getAttribute('data-carousel-target');
-      const action = button.getAttribute('data-action');
-      if (!targetId || !action) return;
-
-      const controller = marqueeControllers.get(targetId);
-      if (!controller) return;
-
-      // User manually triggered — mark as user-paused briefly
-      controller.pause(true);
-      controller.step(action);
-      controller.resumeWithDelay(420);
-
-      const target = document.getElementById(targetId);
-      if (target) {
-        target.focus({ preventScroll: true });
-      }
-    });
-  });
-
-  document.addEventListener('keydown', (event) => {
-    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
-
-    const focused = document.activeElement;
-    if (!(focused instanceof HTMLElement)) return;
-
-    const viewport = focused.classList.contains('carousel-viewport')
-      ? focused
-      : focused.closest('.carousel-block')?.querySelector('.carousel-viewport');
-
-    if (!viewport || !viewport.id) return;
-
-    const controller = marqueeControllers.get(viewport.id);
-    if (!controller) return;
-
-    event.preventDefault();
-    controller.pause();
-    controller.step(event.key === 'ArrowRight' ? 'next' : 'prev');
-    controller.resumeWithDelay(420);
-  });
-}
+// Obsolete Carousel System Removed in favor of Production Grid Showcase
 
 function initializeReveal() {
   const revealItems = document.querySelectorAll('.reveal');
@@ -1363,47 +1487,47 @@ const caseStudyModals = {
     role: 'Social Media Senior Associate',
     period: 'Apr 2025 – Present',
     badge: 'Core Role',
-    summary: 'Built the entire social & content function from zero — generating 1.1M+ reach and 281 leads within the first operating cycle. Established Vedam as a leading institutional voice across six active channels.',
+    summary: 'Built the entire social & content function from zero — generating 4.75M+ ecosystem reach and 281+ high-intent leads within the first operating cycle. Established Vedam as a leading institutional voice across six active channels with an 82x follower growth trajectory.',
     metrics: [
-      { label: 'Instagram Reach', val: '1.1M+', color: 'var(--accent)' },
-      { label: 'Total Leads', val: '281', color: '#1B4D3E' },
-      { label: 'YouTube Reach', val: '431K+', color: '#D44638' },
-      { label: 'Direct Pmts', val: '66%', color: '#F4B400' }
+      { label: 'Ecosystem Reach', val: '4.75M+', color: 'var(--accent)' },
+      { label: 'Cumulative Leads', val: '430+', color: '#1B4D3E' },
+      { label: 'YouTube Views', val: '4.75M/Mo', color: '#D44638' },
+      { label: 'Follower Growth', val: '82×', color: '#F4B400' }
     ],
     systems: portfolioWorkData.vedamSystems,
     platforms: [
       {
         name: 'Instagram',
         items: [
-          'Built weekly 7-post architecture across six content buckets',
-          'Scaled from 230 to 6,100 followers while maintaining 3%+ engagement',
-          'Directed reels and connected Meta campaign CTAs to lead capture'
+          'Scaled from 78 to 6,400+ followers in 10 months (82x growth)',
+          'High-water mark: 7.7M views in Jan 2026 reaching 1.1M+ unique accounts',
+          'Built weekly 7-post architecture across six content buckets (Student Stories, Tech-AI, Campus Life)'
         ]
       },
       {
         name: 'YouTube',
         items: [
-          'Built a Sept 2025 to Sept 2026 calendar with scripts and sequencing',
-          'Owned upload packaging: title, tags, thumbnail plan, and mapping',
-          'Maintained long-form CTR in the 4-6.7% range'
+          'Achieved 4.75M monthly views in Dec 2025 with 4.5x subscriber growth',
+          'Owned end-to-end shorts production pipeline: script, sequence, and SEO packaging',
+          'Maintained long-form CTR in the 4-6.7% range for educational content'
         ]
       },
       {
         name: 'LinkedIn',
         items: [
-          'Established weekly cadence across thought leadership and student stories',
-          'Lifted cycle impressions from 21K to 130K+',
-          'Generated 66 direct leads and tracked lead-to-payment performance'
+          'Lifted weekly cycle impressions from 21K to 130K+ via thought-leadership pillars',
+          'Generated 66 direct leads with a 13.1% peak engagement rate',
+          'Outperformed B2B competitors (Scaler, Mirai) in consistent engagement metrics'
         ]
       }
     ],
     orm: {
-      text: 'The query "Vedam School of Technology review" was ranked at #1 on Google through a managed Quora answer. Supporting evidence includes Quora engagement metrics, Reddit discussion depth, and structured GMB monitoring.',
+      text: 'Strategically positioned Vedam at #1 on Google for "Vedam School of Technology review" via managed Quora and Reddit threads. Established a 5.0-star GMB profile with 100+ verified student reviews.',
       chips: [
-        'Google rank #1 for review-intent query',
-        '2.4K+ Quora views and 18 upvotes',
-        '132+ comments on tracked Reddit thread',
-        '50+ GMB reviews tracked by category'
+        'Google Rank #1 (Review Intent)',
+        '6.6K+ Quora views / 80+ Upvotes',
+        '100% GMB Sentiment (5.0 Stars)',
+        'Active Reddit monitoring (btechtards)'
       ]
     }
   },
@@ -1412,28 +1536,28 @@ const caseStudyModals = {
     role: 'Marketing Copywriter',
     period: 'Apr 2022 – Mar 2025',
     badge: 'Corporate',
-    summary: 'Drove CTR from 0.7% to a 7% peak across push notification and CRM campaigns spanning SSC, Railways, Banking, and UPSC verticals. Managed lifecycle communication for millions of users.',
+    summary: 'Led lifecycle communication and content strategy for 5M+ monthly active users. Achieved a 10x lift in push notification CTR and drove significant revenue spikes through high-performance CRM frameworks.',
     metrics: [
-      { label: 'Peak Push CTR', val: '7%', color: 'var(--accent)' },
-      { label: 'Revenue Uplift', val: '2×', color: '#1B4D3E' },
-      { label: 'Campaign Impr.', val: '241K', color: '#1A73E8' },
-      { label: 'Conversion', val: '4.2%', color: '#F4B400' }
+      { label: 'Peak Push CTR', val: '7.0%', color: 'var(--accent)' },
+      { label: 'Revenue Uplift', val: '2.4×', color: '#1B4D3E' },
+      { label: 'MAU Lifecycle', val: '5M+', color: '#1A73E8' },
+      { label: 'Campaign Impr.', val: '241K+', color: '#F4B400' }
     ],
     ctrProgress: [
-      { label: 'Baseline', val: '0.7%' },
-      { label: 'Consistent', val: '3-5%' },
-      { label: 'Peak', val: '7%', isPeak: true }
+      { label: 'Legacy Baseline', val: '0.7%' },
+      { label: 'Optimized Avg', val: '3-5%' },
+      { label: 'Campaign Peak', val: '7%', isPeak: true }
     ],
     ownership: [
-      'Push notification copy and CRM messaging for SSC, Railways, Banking, and UPSC',
-      'Lifecycle communication on WhatsApp and email with personalization tokens',
-      'DFP banner copy and campaign CTA frameworks',
-      'Seasonal campaigns: Independence Day, Gandhi Jayanti, and New Year',
-      'MoEngage performance reporting and optimization loops'
+      'Engineered push notification and CRM messaging for SSC, Railways, Banking, and UPSC verticals',
+      'Deployed automated lifecycle drips on WhatsApp and Email using MoEngage personalization',
+      'High-Performance Campaign: Independence Day 2024 achieved 2x revenue vs baseline',
+      'Recipient of "Above and Beyond" Award (May 2024) for operational excellence',
+      'Developed standardized DFP banner copy frameworks for seasonal sale events'
     ],
     credential: {
       title: 'Certificate of Appreciation',
-      text: 'Recognized with the "Above and Beyond" award in May 2024 by Adda247 leadership: CEO Anil Nagar and COO Saurabh Bansal.'
+      text: 'Awarded by Adda247 leadership (Anil Nagar, CEO & Saurabh Bansal, COO) for outperforming growth targets in the 2024 operating cycle.'
     }
   }
 };
@@ -2060,10 +2184,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initializeMobileMenu();
   initializeSmoothScroll();
   initializeActiveNavLink();
-  initializeCarouselSystem();
   initializeReveal();
   initializeCaseModal();
   initializeSystemModal();
+  initializeWritingModal();
+  initializeProductionFilters();
+  initializeProductionModal();
 });
-
-

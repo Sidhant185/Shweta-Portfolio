@@ -126,13 +126,9 @@
         </button>
 
         <ul class="nav-links" id="navLinks">
-          <li><a href="#hero">Home</a></li>
-          <li><a href="#profile">Profile</a></li>
           <li><a href="#expertise">Expertise</a></li>
           <li><a href="#case-studies">Case Studies</a></li>
           <li><a href="#featured-work">Featured Work</a></li>
-          <li><a href="#job-pathway">Job Pathway</a></li>
-          <li><a href="#education">Education</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
       </div>
@@ -200,7 +196,7 @@
 
         <div class="hero-actions reveal reveal-delay-5">
           <a href="Shweta_Ranjan_Resume (3).pdf" class="btn btn-primary" download>Download Resume (PDF)</a>
-          <a href="#featured-work" class="btn btn-secondary">View Work Samples</a>
+          <a href="#case-studies" class="btn btn-secondary">View Work Samples</a>
           <a href="#contact" class="btn btn-link">Discuss Role Fit &rarr;</a>
         </div>
 
@@ -403,86 +399,14 @@
           <div class="writing-evidence-head"
             style="border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 40px">
             <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; color: var(--accent-strong)">
-              Vertical Content Depth</h3>
+              Multidisciplinary Writing Portfolio</h3>
             <p class="writing-evidence-sub" style="font-size: 1rem; color: var(--text-secondary); max-width: 700px">
               Direct copywriting and editorial ownership across 4+ industries &mdash; providing the narrative backbone
               for websites, SEO campaigns, and performance lifecycles.
             </p>
           </div>
 
-          <div class="writing-clients-list">
-            <div class="writing-client-row">
-              <div class="writing-client-meta">
-                <span class="writing-client-initial">RR</span>
-                <div>
-                  <a href="https://www.railrecipe.com/" target="_blank" rel="noopener noreferrer"
-                    class="writing-client-name">Rail Recipe</a>
-                  <p class="writing-client-domain">Travel &middot; FoodTech</p>
-                </div>
-              </div>
-              <div class="writing-client-detail">
-                <span class="writing-type-badge">SEO + Website Copy</span>
-                <span class="writing-period">2021 &ndash; 2022</span>
-              </div>
-              <div class="writing-client-tags">
-                <span>Homepage</span><span>Service pages</span><span>SEO Articles</span>
-              </div>
-            </div>
-
-            <div class="writing-client-row">
-              <div class="writing-client-meta">
-                <span class="writing-client-initial">TM</span>
-                <div>
-                  <a href="https://blog.teachmint.com/" target="_blank" rel="noopener noreferrer"
-                    class="writing-client-name">Teachmint</a>
-                  <p class="writing-client-domain">EdTech &middot; SaaS</p>
-                </div>
-              </div>
-              <div class="writing-client-detail">
-                <span class="writing-type-badge">EdTech Editorial</span>
-                <span class="writing-period">2021 &ndash; 2022</span>
-              </div>
-              <div class="writing-client-tags">
-                <span>Strategy blogs</span><span>Pedagogy content</span><span>SEO structure</span>
-              </div>
-            </div>
-
-            <div class="writing-client-row">
-              <div class="writing-client-meta">
-                <span class="writing-client-initial">NE</span>
-                <div>
-                  <a href="https://numeneduservices.com/" target="_blank" rel="noopener noreferrer"
-                    class="writing-client-name">Numen Edu</a>
-                  <p class="writing-client-domain">Corporate Services</p>
-                </div>
-              </div>
-              <div class="writing-client-detail">
-                <span class="writing-type-badge">Brand Architecture</span>
-                <span class="writing-period">2021 &ndash; 2022</span>
-              </div>
-              <div class="writing-client-tags">
-                <span>Brand voice</span><span>Programme mapping</span><span>Landing pages</span>
-              </div>
-            </div>
-
-            <div class="writing-client-row">
-              <div class="writing-client-meta">
-                <span class="writing-client-initial">TC</span>
-                <div>
-                  <a href="https://techmiles.co/" target="_blank" rel="noopener noreferrer"
-                    class="writing-client-name">Techmiles</a>
-                  <p class="writing-client-domain">Career Tech</p>
-                </div>
-              </div>
-              <div class="writing-client-detail">
-                <span class="writing-type-badge">Technical Copy</span>
-                <span class="writing-period">2021 &ndash; 2022</span>
-              </div>
-              <div class="writing-client-tags">
-                <span>Career guides</span><span>Skill blogs</span><span>Platform messaging</span>
-              </div>
-            </div>
-          </div>
+          <div id="writingClientGrid" class="writing-clients-grid"></div>
 
           <div class="writing-skills-bar" style="margin-top: 40px">
             <div class="writing-skill">
@@ -646,41 +570,13 @@
           controls to pause and navigate manually.
         </p>
 
-        <article class="carousel-block reveal reveal-delay-3" aria-labelledby="youtubeTitle">
-          <div class="carousel-head">
-            <h3 id="youtubeTitle">YouTube Shorts</h3>
-            <div class="carousel-controls">
-              <button class="carousel-btn" type="button" data-carousel-target="youtubeCarousel" data-action="prev"
-                aria-label="Show previous YouTube shorts">
-                Previous
-              </button>
-              <button class="carousel-btn" type="button" data-carousel-target="youtubeCarousel" data-action="next"
-                aria-label="Show next YouTube shorts">
-                Next
-              </button>
-            </div>
-          </div>
-          <div class="carousel-viewport" id="youtubeCarousel" tabindex="0" role="list" aria-label="YouTube shorts">
-          </div>
-        </article>
+        <div class="production-filter-bar reveal reveal-delay-3">
+          <button class="filter-btn is-active" data-filter="all">All Productions</button>
+          <button class="filter-btn" data-filter="YouTube">YouTube Shorts</button>
+          <button class="filter-btn" data-filter="Instagram">Instagram Reels</button>
+        </div>
 
-        <article class="carousel-block reveal reveal-delay-4" aria-labelledby="instagramTitle">
-          <div class="carousel-head">
-            <h3 id="instagramTitle">Instagram Reels</h3>
-            <div class="carousel-controls">
-              <button class="carousel-btn" type="button" data-carousel-target="instagramCarousel" data-action="prev"
-                aria-label="Show previous Instagram reels">
-                Previous
-              </button>
-              <button class="carousel-btn" type="button" data-carousel-target="instagramCarousel" data-action="next"
-                aria-label="Show next Instagram reels">
-                Next
-              </button>
-            </div>
-          </div>
-          <div class="carousel-viewport" id="instagramCarousel" tabindex="0" role="list" aria-label="Instagram reels">
-          </div>
-        </article>
+        <div id="productionGrid" class="production-grid reveal reveal-delay-4"></div>
 
         <section class="channel-presence reveal reveal-delay-5" aria-label="Channel presence">
           <h3>Channel Presence</h3>
