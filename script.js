@@ -1460,55 +1460,7 @@ function createMarqueeController(viewport) {
 // Obsolete Carousel System Removed in favor of Production Grid Showcase
 
 function initializeReveal() {
-  // GSAP Hero Animations
-  if (window.gsap) {
-    // Floating Blobs Parallax
-    gsap.to('.blob-1', {
-      y: '50px',
-      x: '30px',
-      scrollTrigger: {
-        trigger: '.hero',
-        start: 'top top',
-        end: 'bottom top',
-        scrub: 1
-      }
-    });
-    gsap.to('.blob-2', {
-      y: '-80px',
-      x: '-40px',
-      scrollTrigger: {
-        trigger: '.hero',
-        start: 'top top',
-        end: 'bottom top',
-        scrub: 1.5
-      }
-    });
-
-    // Snapshot Chips Floating Animation
-    const chips = document.querySelectorAll('.snapshot-chip');
-    chips.forEach((chip, i) => {
-      gsap.to(chip, {
-        y: i % 2 === 0 ? -12 : 12,
-        duration: 3 + i * 0.5,
-        repeat: -1,
-        yoyo: true,
-        ease: 'power1.inOut',
-        delay: i * 0.2
-      });
-    });
-
-    // Hero Content Entrance
-    const tl = gsap.timeline({ defaults: { ease: 'expo.out', duration: 1.2 } });
-    tl.from('.hero-layout h1', { y: 60, opacity: 0, delay: 0.2 })
-      .from('.hero-role', { y: 30, opacity: 0 }, '-=0.8')
-      .from('.hero-summary', { y: 20, opacity: 0 }, '-=1')
-      .from('.snapshot-chip', { scale: 0.8, opacity: 0, stagger: 0.1 }, '-=1')
-      .from('.hero-actions', { y: 20, opacity: 0 }, '-=1')
-      .from('.hero-metric', { y: 40, opacity: 0, stagger: 0.15 }, '-=0.8');
-  }
-
-  // Standard Scroll Reveal for non-hero elements
-  const revealItems = document.querySelectorAll('.reveal:not(.hero *)');
+  const revealItems = document.querySelectorAll('.reveal');
   if (!revealItems.length) return;
 
   const revealObserver = new IntersectionObserver(
